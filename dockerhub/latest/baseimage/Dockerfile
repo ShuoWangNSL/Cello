@@ -1,6 +1,6 @@
 FROM busybox as downloader
 
-RUN cd /tmp && wget -c https://github.com/hyperledger/cello/archive/master.zip && \
+RUN cd /tmp && wget -c https://github.com/ShuoWangNSL/cello/archive/master.zip && \
     unzip master.zip
 
 FROM python:3.6
