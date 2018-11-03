@@ -880,26 +880,6 @@ class ClusterHandler(object):
                 self.db_update_one({"id": cluster_id},
                                    {"health": "OK"})
                 return True
-        elif cluster.get("network_type") == NETWORK_TYPE_FABRIC_V1_2:
-            service_url = cluster.get("service_url", {})
-            health_ok = True
-            for url in service_url.values():
-                ip = url.split(":")[0]
-                port = int(url.split(":")[1])
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                result = sock.connect_ex((ip, port))
-                sock.close()
-                logger.info("check V1_2 {}:{} result {}".format(ip, port, result))
-                if result != 0:
-                    health_ok = True
-            if not health_ok:
-                self.db_update_one({"id": cluster_id},
-                                   {"health": "FAIL"})
-                return False
-            else:
-                self.db_update_one({"id": cluster_id},
-                                   {"health": "OK"})
-                return True
         return True
 
     def db_update_one(self, filter, operations, after=True, col="active"):
