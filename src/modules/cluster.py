@@ -871,7 +871,9 @@ class ClusterHandler(object):
                 sock.close()
                 logger.info("check {}:{} result {}".format(ip, port, result))
                 if result != 0:
-                    health_ok = True
+                    health_ok = False
+                logger.info("{}:{} health {}".format(ip, port, health_ok))
+            logger.info("final health {}".format(health_ok))
             if not health_ok:
                 self.db_update_one({"id": cluster_id},
                                    {"health": "FAIL"})
