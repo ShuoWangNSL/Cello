@@ -152,7 +152,7 @@ docker-operator-dashboard: build/docker/operator-dashboard/$(DUMMY)
 
 docker-clean: stop image-clean ##@Clean all existing images
 
-DOCKERHUB_IMAGES = baseimage operator-dashboard
+DOCKERHUB_IMAGES = baseimage operator-dashboard watchdog
 
 dockerhub: $(patsubst %,dockerhub-%,$(DOCKERHUB_IMAGES))  ##@Building latest images with dockerhub materials, to valid them
 

@@ -43,14 +43,16 @@ def network_check_health(net_id, retries=60, period=5):
     if net.get("status") != NETWORK_STATUS_RUNNING:  # check running one
         return
     net_name = net.get("name")
-    logger.debug("Chain {}/{}: checking health".format(net_name, net_id))
+    logger.info("Chain {}/{}: checking health".format(net_name, net_id))
 
     # free or used by user, then check its health
     for i in range(retries):
         if cluster_handler.refresh_health(net_id):  # chain is healthy
+            logger.info("Health Check {}: cluster {}/{} is healthy.".format(
+                i, net_name, net_id))
             return
         else:
-            logger.debug("Health Check {}: cluster {}/{} is unhealthy!".format(
+            logger.info("Health Check {}: cluster {}/{} is unhealthy!".format(
                 i, net_name, net_id))
             time.sleep(period)
     logger.warning("Chain {}/{} is unhealthy!".format(net_name, net_id))
