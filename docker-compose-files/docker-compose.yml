@@ -97,6 +97,7 @@ services:
       - FABRIC_CFG_PATH=/etc/hyperledger/fabric
     volumes:
       - /opt/cello/baas:/opt/data
+      - $ROOT_PATH/src/agent/docker/_compose_files/fabric-1.2:/etc/hyperledger/fabric-1.2
 
   # cello engine service
   engine:

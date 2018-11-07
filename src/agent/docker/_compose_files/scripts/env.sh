@@ -291,6 +291,7 @@ function switchToAdminIdentity {
       fabric-ca-client enroll -d -u https://$ADMIN_NAME:$ADMIN_PASS@$CA_HOST:7054
       mv $ORG_ADMIN_HOME/msp/cacerts/* $ORG_ADMIN_HOME/msp/cacerts/${CA_HOST}-cert.pem #rename cacert
       mv $ORG_ADMIN_HOME/msp/signcerts/* $ORG_ADMIN_HOME/msp/signcerts/$ORG_ADMIN_CERT_FILENAME #rename signcert
+      mv $ORG_ADMIN_HOME/msp/keystore/* $ORG_ADMIN_HOME/msp/keystore/admin_sk #rename signcert
       # If admincerts are required in the MSP, copy the cert there now and to my local MSP also
       if [ $ADMINCERTS ]; then
          mkdir -p $(dirname "${ORG_ADMIN_CERT}")
