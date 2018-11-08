@@ -192,7 +192,7 @@ class ChainService extends Service {
         'ssl-target-name-override': ordererConfig.serverHostName,
       },
       tlsCACerts: {
-        path: '/var/www/app/lib/fabric/fixtures/channel/v1.2/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt',
+        path: '/etc/hyperledger/fabric-1.2/${chainId}/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt',
       },
       url: `grpcs://${ordererConfig.url}`,
     };
@@ -212,7 +212,7 @@ class ChainService extends Service {
             'ssl-target-name-override': `peer${peerIndex}.org${index + 1}.example.com`,
           },
           tlsCACerts: {
-            path: `/var/www/app/lib/fabric/fixtures/channel/v1.2/crypto-config/peerOrganizations/org${index + 1}.example.com/peers/peer${peerIndex}.org${index + 1}.example.com/tls/ca.crt`,
+            path: `/etc/hyperledger/fabric-1.2/${chainId}/crypto-config/peerOrganizations/org${index + 1}.example.com/peers/peer${peerIndex}.org${index + 1}.example.com/tls/ca.crt`,
           },
           url: `grpcs://${peerConfigs[peerIndex].grpc}`,
         };
@@ -225,13 +225,13 @@ class ChainService extends Service {
       }
       organizations[`org${index + 1}`] = {
         adminPrivateKey: {
-          path: `/var/www/app/lib/fabric/fixtures/channel/v1.2/crypto-config/peerOrganizations/org${index + 1}.example.com/users/Admin@org${index + 1}.example.com/msp/keystore/admin_sk`,
+          path: `/etc/hyperledger/fabric-1.2/${chainId}/crypto-config/peerOrganizations/org${index + 1}.example.com/users/Admin@org${index + 1}.example.com/msp/keystore/admin_sk`,
         },
         certificateAuthorities: [`ca-org${index + 1}`],
         mspid: `Org${index + 1}MSP`,
         peers: peerNames,
         signedCert: {
-          path: `/var/www/app/lib/fabric/fixtures/channel/v1.2/crypto-config/peerOrganizations/org${index + 1}.example.com/users/Admin@org${index + 1}.example.com/msp/signcerts/Admin@org${index + 1}.example.com-cert.pem`,
+          path: `/etc/hyperledger/fabric-1.2/${chainId}/crypto-config/peerOrganizations/org${index + 1}.example.com/users/Admin@org${index + 1}.example.com/msp/signcerts/Admin@org${index + 1}.example.com-cert.pem`,
         },
       };
       certificateAuthorities[`ca-org${index + 1}`] = {
@@ -246,7 +246,7 @@ class ChainService extends Service {
           },
         ],
         tlsCACerts: {
-          path: `/var/www/app/lib/fabric/fixtures/channel/v1.2/crypto-config/peerOrganizations/org${index + 1}.example.com/ca/ca.org${index + 1}.example.com-cert.pem`,
+          path: `/etc/hyperledger/fabric-1.2/${chainId}/crypto-config/peerOrganizations/org${index + 1}.example.com/ca/ca.org${index + 1}.example.com-cert.pem`,
         },
         url: `https://${caConfig.address}`,
       };
@@ -303,7 +303,7 @@ class ChainService extends Service {
     fs.ensureDirSync(channelConfigPath);
     fs.ensureDirSync(keyValueStorePath);
     fs.ensureDirSync(keyValueStoreBackPath);
-    if (shell.exec(`FABRIC_CFG_PATH=/etc/hyperledger/${chain.type} /usr/local/bin/${chain.type}/configtxgen -profile TwoOrgsChannel -channelID ${config.default.channelName} -outputCreateChannelTx ${channelConfigPath}/${config.default.channelName}.tx`).code !== 0) {
+    if (shell.exec(`FABRIC_CFG_PATH=/etc/hyperledger/${chain.type}/${chain._id.toString()} /usr/local/bin/${chain.type}/configtxgen -profile TwoOrgsChannel -channelID ${config.default.channelName} -outputCreateChannelTx ${channelConfigPath}/${config.default.channelName}.tx`).code !== 0) {
       ctx.logger.error('run failed');
     }
     const network = await this.generateNetwork(chain._id.toString(), chain.type);
