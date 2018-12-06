@@ -30,7 +30,7 @@ class SmartContractService extends Service {
         const smartContractPath = `${smartContractRootDir}/${smartContractId}`;
         const smartContractCodePath = `${smartContractRootDir}/${smartContractId}/${smartContract.version}`;
         fs.ensureDirSync(smartContractCodePath);
-        shell.cp('-R', `${smartContract.path}/*`, smartContractCodePath);
+        shell.cp('-R', `${smartContract.path}`, smartContractCodePath);
         await ctx.model.SmartContract.create({
           _id: smartContractId,
           name: smartContract.name,
@@ -114,7 +114,7 @@ class SmartContractService extends Service {
     const smartContractCodePath = `${smartContractPath}/${version}`;
     if (smartContractCodePath !== smartContractCode.path) {
       fs.ensureDirSync(smartContractCodePath);
-      await shell.cp('-R', `${smartContractCode.path}/*`, smartContractCodePath);
+      await shell.cp('-R', `${smartContractCode.path}`, smartContractCodePath);
       rimraf(smartContractCode.path, function() {
         ctx.logger.debug(`delete smart contract path ${smartContractCode.path}`);
       });
