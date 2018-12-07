@@ -304,8 +304,14 @@ class ChainService extends Service {
     fs.ensureDirSync(channelConfigPath);
     fs.ensureDirSync(keyValueStorePath);
     fs.ensureDirSync(keyValueStoreBackPath);
-    if (shell.exec(`FABRIC_CFG_PATH=/etc/hyperledger/${chain.type}/${chain.chainId} /usr/local/bin/${chain.type}/configtxgen -profile TwoOrgsChannel -channelID ${config.default.channelName} -outputCreateChannelTx ${channelConfigPath}/${config.default.channelName}.tx`).code !== 0) {
-      ctx.logger.error('run failed');
+    if (chain.type === 'fabric-1.0') {
+      if (shell.exec(`FABRIC_CFG_PATH=/etc/hyperledger/${chain.type} /usr/local/bin/${chain.type}/configtxgen -profile TwoOrgsChannel -channelID ${config.default.channelName} -outputCreateChannelTx ${channelConfigPath}/${config.default.channelName}.tx`).code !== 0) {
+        ctx.logger.error('run failed');
+      }
+    } else {
+      if (shell.exec(`FABRIC_CFG_PATH=/etc/hyperledger/${chain.type}/${chain.chainId} /usr/local/bin/${chain.type}/configtxgen -profile TwoOrgsChannel -channelID ${config.default.channelName} -outputCreateChannelTx ${channelConfigPath}/${config.default.channelName}.tx`).code !== 0) {
+        ctx.logger.error('run failed');
+      }
     }
     const network = await this.generateNetwork(chain._id.toString(), chain.type);
     ctx.logger.debug('network ', JSON.stringify(network, null, 2));
